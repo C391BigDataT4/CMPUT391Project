@@ -1,0 +1,6 @@
+Host 10.2.3.31
+    ProxyCommand ssh -i 391winter.pem -q ubuntu@162.246.157.170 -W %h:%p
+Host 10.2.3.30
+    ProxyCommand ssh -i 391winter.pem -q ubuntu@162.246.157.170 -W %h:%p
+Host 10.2.3.5
+    ProxyCommand ssh -i 391winter.pem -q ubuntu@162.246.157.170 -W %h:%p
