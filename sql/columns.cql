@@ -1,5 +1,3 @@
-use group4;
-create table cdr(
 CITY_ID int,
 MSC_CODE int,
 STARTTIME timestamp,
@@ -470,5 +468,3 @@ FD8_FFC int,
 FD8_FLOW_CFC_QUAL int,
 FD8_FLOW_CPFAIL_VAL int,
 FD8_SPARE_FLOW1 int,
-primary key(SEQ_NUM)
-);
