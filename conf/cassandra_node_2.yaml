@@ -40,7 +40,7 @@ max_hint_window_in_ms: 10800000 # 3 hours
 # are two nodes in the cluster, each delivery thread will use the maximum
 # rate; if there are three, each will throttle to half of the maximum,
 # since we expect two nodes to be delivering hints simultaneously.)
-hinted_handoff_throttle_in_kb: 10
+hinted_handoff_throttle_in_kb: 1024
 # Number of threads with which to deliver hints;
 # Consider increasing this number when you have multi-dc deployments, since
 # cross-dc handoff tends to be slower
@@ -48,7 +48,7 @@ max_hints_delivery_threads: 2
 
 # Maximum throttle in KBs per second, total. This will be
 # reduced proportionally to the number of nodes in the cluster.
-batchlog_replay_throttle_in_kb: 10
+batchlog_replay_throttle_in_kb: 1024
 
 # The following setting populates the page cache on memtable flush and compaction
 # WARNING: Enable this setting only when the whole node's data fits in memory.
@@ -107,10 +107,10 @@ partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 # will spread data evenly across them, subject to the granularity of
 # the configured compaction strategy.
 data_file_directories:
-    - /mystorage/data
+    - /mystorage/cassandra/data
 
 # commit log
-commitlog_directory: /home/ubuntu/cassandra/commitlog
+commitlog_directory: /mystorage/cassandra/commitlog
 
 # policy for data disk failures:
 # stop: shut down gossip and Thrift, leaving the node effectively dead, but
@@ -119,7 +119,7 @@ commitlog_directory: /home/ubuntu/cassandra/commitlog
 #              remaining available sstables.  This means you WILL see obsolete
 #              data at CL.ONE!
 # ignore: ignore fatal errors and let requests fail, as in pre-1.2 Cassandra
-disk_failure_policy: best_effort
+disk_failure_policy: stop
 
 # Maximum size of the key cache in memory.
 #
@@ -185,7 +185,7 @@ row_cache_save_period: 0
 # memory_allocator: NativeAllocator
 
 # saved caches
-saved_caches_directory: /home/ubuntu/cassandra/saved_caches
+saved_caches_directory: /mystorage/cassandra/saved_caches
 
 # commitlog_sync may be either "periodic" or "batch."
 # When in batch mode, Cassandra won't ack writes until the commit log
@@ -239,8 +239,8 @@ seed_provider:
 # On the other hand, since writes are almost never IO bound, the ideal
 # number of "concurrent_writes" is dependent on the number of cores in
 # your system; (8 * number_of_cores) is a good rule of thumb.
-concurrent_reads: 16
-concurrent_writes: 16
+concurrent_reads: 32
+concurrent_writes: 32
 
 # Total memory to use for sstable-reading buffers.  Defaults to
 # the smaller of 1/4 of heap or 512MB.
@@ -298,7 +298,7 @@ ssl_storage_port: 7001
 # address associated with the hostname (it might not be).
 #
 # Setting this to 0.0.0.0 is always wrong.
-listen_address: 127.0.0.1
+listen_address: 10.2.3.30
 
 # Address to broadcast to other Cassandra nodes
 # Leaving this blank will set it to the same value as listen_address
@@ -318,11 +318,11 @@ native_transport_port: 9042
 # This is similar to rpc_max_threads though the default differs slightly (and
 # there is no native_transport_min_threads, idle threads will always be stopped
 # after 30 seconds).
-native_transport_max_threads: 512
+# native_transport_max_threads: 128
 #
 # The maximum size of allowed frame. Frame (requests) larger than this will
 # be rejected as invalid. The default is 256MB.
-native_transport_max_frame_size_in_mb: 512
+# native_transport_max_frame_size_in_mb: 256
 
 # Whether to start the thrift rpc server.
 start_rpc: true
@@ -360,7 +360,7 @@ rpc_keepalive: true
 #
 # Alternatively,  can provide your own RPC server by providing the fully-qualified class name
 # of an o.a.c.t.TServerFactory that can create an instance of it.
-rpc_server_type: hsha
+rpc_server_type: sync
 
 # Uncomment rpc_min|max_thread to set request pool size limits.
 #
@@ -410,7 +410,7 @@ snapshot_before_compaction: false
 # or dropping of column families. The STRONGLY advised default of true
 # should be used to provide data safety. If you set this flag to false, you will
 # lose data on truncation or drop.
-auto_snapshot: false
+auto_snapshot: true
 
 # When executing a scan, within or across a partition, we need to keep the
 # tombstones seen in memory so we can return them to the coordinator, which
