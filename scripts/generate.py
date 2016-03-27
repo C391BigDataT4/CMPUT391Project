@@ -23,18 +23,13 @@ def randomGen(data_type):
         return unix_time_millis(datetime.datetime.now())
     elif data_type == "float":
         return random.uniform(1.0, 2.0)
-    else
+    else:
         print "Warning! Unknown data type."
         return ""
 
 def main(argv):
 
-    if isinstance(argv[1]):
-        num_days = argv[1]
-    else
-        num_days = 1
-
-    print num_days
+    num_days = int(argv[1])
     labels = []
     types = []
 
@@ -52,12 +47,12 @@ def main(argv):
     query = "insert into cdr (" + "".join(label + "," for label in labels)[:-1] + ") values (" + ("?," * (len(labels) - 1)) + "?)"
     prepared = session.prepare(query)
 
+    for i in range (num_days):
+        randomData = []
+        for i in range( len(labels) ):
+            randomData.append( randomGen( types[i] ) )
 
-    randomData = []
-    for i in range( len(labels) ):
-        randomData.append( randomGen( types[i] ) )
-
-    session.execute_async( prepared.bind(randomData) )
+        session.execute_async( prepared.bind(randomData) )
 
 if __name__ == "__main__":
     main(sys.argv)
