@@ -2,6 +2,7 @@ import sys
 import random
 import string
 import datetime
+import timeit
 from cassandra.cluster import Cluster
 
 def unix_time(dt):
@@ -29,6 +30,8 @@ def randomGen(data_type):
 
 def main(argv):
 
+    start_time = timeit.default_timer()
+
     num_days = int(argv[1])
     labels = []
     types = []
@@ -41,7 +44,7 @@ def main(argv):
         types.append(line.split()[1].strip(','))
 
     from cassandra.cluster import Cluster
-    cluster = Cluster(['127.0.0.1'])
+    cluster = Cluster(['10.2.3.31', "10.2.3.30", "10.2.3.5"], compression=True)
     session = cluster.connect("group4")
 
     query = "insert into cdr (" + "".join(label + "," for label in labels)[:-1] + ") values (" + ("?," * (len(labels) - 1)) + "?)"
@@ -52,7 +55,11 @@ def main(argv):
         for i in range( len(labels) ):
             randomData.append( randomGen( types[i] ) )
 
-        session.execute_async( prepared.bind(randomData) )
+        session.execute_async( prepared, randomData )
+
+    seconds = timeit.default_timer() - start_time
+
+    print "%d rows inserted in " % num_days + str( seconds ) + " seconds."
 
 if __name__ == "__main__":
     main(sys.argv)
