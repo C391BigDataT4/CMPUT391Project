@@ -1,5 +1,6 @@
 import sys
 import timeit
+import time
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
 from cassandra.concurrent import execute_concurrent_with_args
@@ -29,7 +30,7 @@ def main(argv):
     with open(filename) as f:
         for line in f:
             count = count + 1
-            print query + line[:-1] + ')'
+            # print query + line[:-1] + ')'
             session.execute_async( query + line[:-1] + ')' )
 
     seconds = timeit.default_timer() - start_time
@@ -66,6 +67,8 @@ def main(argv):
     # f.truncate()
     # f.write("%d rows inserted in " % (num_days*10000) + str( seconds/60 ) + " mins.\n")
     # f.close()
+
+    time.sleep( 5 )
 
 if __name__ == "__main__":
     main(sys.argv)
