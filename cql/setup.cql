@@ -2,6 +2,7 @@ drop keyspace if exists group4;
 create keyspace group4 WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 use group4;
 create table cdr(
+SEQ_NUM bigint,
 CITY_ID int,
 MSC_CODE int,
 STARTTIME timestamp,
@@ -22,7 +23,6 @@ LAST_LATITUDE  float,
 LAST_GRID_ID_100 text,
 LAST_GRID_ID_1000 text,
 PCMD_VER  int,
-SEQ_NUM bigint,
 MONTH_DAY int,
 DUP_SEQ_NUM int,
 MOBILE_ID_TYPE int,
@@ -472,5 +472,6 @@ FD8_FFC int,
 FD8_FLOW_CFC_QUAL int,
 FD8_FLOW_CPFAIL_VAL int,
 FD8_SPARE_FLOW1 int,
-primary key(SEQ_NUM)
-);
+primary key(MOBILE_ID_TYPE, SEQ_NUM, STARTTIME, CITY_ID, MSC_CODE,SEIZ_CELL_NUM_L, MOBILE_ID,SERVICE_NODE_ID, RUM_DATA_NUM, DUP_SEQ_NUM, SEIZ_CELL_NUM, FLOW_DATA_INC,SUB_HOME_INT_PRI,CON_OHM_NUM,SESS_SFC,MONTH_DAY)
+)
+WITH CLUSTERING ORDER BY (SEQ_NUM ASC);
