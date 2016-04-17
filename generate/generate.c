@@ -13,7 +13,7 @@ int main(int argc, char * argv[]) {
   } else {
     num_days = atoi(argv[1]);
   }
-  // int num_rows = num_days * 100;
+  // int num_rows = num_days * 10000;
   int num_rows = num_days;
 
   srand(time(NULL));
@@ -51,13 +51,20 @@ int main(int argc, char * argv[]) {
   time(&rawtime);
   timeinfo = localtime (&rawtime);
   // strftime(filename, 64, "/mystorage/data_%Y-%m-%d_%H-%M-%S.txt", timeinfo);
-  strftime(filename, 64, "data_%Y-%m-%d_%H-%M-%S.txt", timeinfo);
+  strftime(filename, 64, "data_%Y-%m-%d_%H-%M-%S.csv", timeinfo);
 
 
   clock_t start = clock(), diff;
 
   fp = fopen(filename, "w+");
   int n;
+
+  // for (n=0; n<469; n++) {
+  //   fprintf(fp, "%s,", labels[n]);
+  // }
+  // fprintf(fp, "%s\n", labels[469]);
+
+
   for (n=0; n<num_rows; n++) {
     fprintf(fp, "%d,", n);
     int i;
@@ -83,29 +90,8 @@ int main(int argc, char * argv[]) {
         fprintf(fp, "%f,", (float)rand()/(float)RAND_MAX);
       }
     }
-    // last column is a int
+    // last column is an int
     fprintf(fp, "%d\n", rand());
-    // // last column. No ',' after the value
-    // if (strcmp(labels[i], "MONTH_DAY") == 0) {
-    //   fprintf(fp, "%d,", rand()%31+1);
-    // } else if (strcmp(labels[i], "MOBILE_ID_TYPE") == 0) {
-    //   fprintf(fp, "%d,", rand()%10);
-    // } else if (strcmp(types[469], "int") == 0) {
-    //   fprintf(fp, "%d\n", rand());
-    // } else if (strcmp(types[469], "bigint") == 0) {
-    //   fprintf(fp, "%d\n", rand());
-    // } else if (strcmp(types[469], "text") == 0) {
-    //   fprintf(fp, "'");
-    //   int i;
-    //   for (i = 1; i < 10; i++) {
-    //     fprintf(fp, "%c", 'a' + rand()%26); // a-z
-    //   }
-    //   fprintf(fp, "'\n");
-    // } else if (strcmp(types[469], "timestamp") == 0) {
-    //   fprintf(fp, "%d\n", base_time + rand()%1000000);
-    // } else if (strcmp(types[469], "float") == 0) {
-    //   fprintf(fp, "%f\n", (float)rand()/(float)RAND_MAX);
-    // }
   }
   fclose(fp);
 

@@ -17,7 +17,7 @@ def main(argv):
     for line in lines:
         labels.append(line.split()[0])
 
-    cluster = Cluster(['10.2.3.31', "10.2.3.30", "10.2.3.5"])
+    cluster = Cluster(['10.2.2.187', "10.2.2.180", "10.2.0.157"])
     session = cluster.connect("group4")
 
     # query = "insert into cdr (" + "".join(label + "," for label in labels)[:-1] + ") values (" + ("?," * (len(labels) - 1)) + "?)"
