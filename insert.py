@@ -69,7 +69,7 @@ def main(argv):
     # f.write("%d rows inserted in " % (num_days*10000) + str( seconds/60 ) + " mins.\n")
     # f.close()
 
-    time.sleep( 5 )
+    time.sleep( 60 )
 
 if __name__ == "__main__":
     main(sys.argv)

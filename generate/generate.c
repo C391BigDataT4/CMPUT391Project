@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
   char filename [64];
   time(&rawtime);
   timeinfo = localtime (&rawtime);
-  strftime(filename, 64, "/mystorage/data_%Y-%m-%d_%H-%M-%S.txt", timeinfo);
+  strftime(filename, 64, "/mystorage/data_%Y-%m-%d_%H-%M-%S.csv", timeinfo);
   // strftime(filename, 64, "data_%Y-%m-%d_%H-%M-%S.csv", timeinfo);
 
 
