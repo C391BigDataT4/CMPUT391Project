@@ -13,8 +13,8 @@ int main(int argc, char * argv[]) {
   } else {
     num_days = atoi(argv[1]);
   }
-  // int num_rows = num_days * 10000;
-  int num_rows = num_days;
+  int num_rows = num_days * 10000;
+  // int num_rows = num_days;
 
   srand(time(NULL));
 
@@ -50,8 +50,8 @@ int main(int argc, char * argv[]) {
   char filename [64];
   time(&rawtime);
   timeinfo = localtime (&rawtime);
-  // strftime(filename, 64, "/mystorage/data_%Y-%m-%d_%H-%M-%S.txt", timeinfo);
-  strftime(filename, 64, "data_%Y-%m-%d_%H-%M-%S.csv", timeinfo);
+  strftime(filename, 64, "/mystorage/data_%Y-%m-%d_%H-%M-%S.txt", timeinfo);
+  // strftime(filename, 64, "data_%Y-%m-%d_%H-%M-%S.csv", timeinfo);
 
 
   clock_t start = clock(), diff;
@@ -66,13 +66,18 @@ int main(int argc, char * argv[]) {
 
 
   for (n=0; n<num_rows; n++) {
-    fprintf(fp, "%d,", n);
     int i;
-    for (i=1; i<469; i++) {
+    for (i=0; i<469; i++) {
       if (strcmp(labels[i], "MONTH_DAY") == 0) {
         fprintf(fp, "%d,", rand()%31+1);
       } else if (strcmp(labels[i], "MOBILE_ID_TYPE") == 0) {
         fprintf(fp, "%d,", rand()%10);
+      } else if (strcmp(labels[i], "CITY_ID") == 0) {
+        fprintf(fp, "%d,", rand()%100);
+      } else if (strcmp(labels[i], "MSC_CODE") == 0) {
+        fprintf(fp, "%d,", rand()%1000);
+      } else if (strcmp(labels[i], "SERVICE_NODE_ID") == 0) {
+        fprintf(fp, "%d,", rand()%10000);
       } else if (strcmp(types[i], "int") == 0) {
         fprintf(fp, "%d,", rand());
       } else if (strcmp(types[i], "bigint") == 0) {

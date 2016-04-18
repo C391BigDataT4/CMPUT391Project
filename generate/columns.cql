@@ -1,4 +1,3 @@
-SEQ_NUM bigint
 CITY_ID int
 MSC_CODE int
 STARTTIME timestamp
@@ -19,6 +18,7 @@ LAST_LATITUDE float
 LAST_GRID_ID_100 text
 LAST_GRID_ID_1000 text
 PCMD_VER int
+SEQ_NUM bigint
 MONTH_DAY int
 DUP_SEQ_NUM int
 MOBILE_ID_TYPE int
