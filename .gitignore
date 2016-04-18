@@ -1,4 +1,4 @@
 *.pem
 .DS_Store
-data_*.txt
+data_*.csv
 temp
