@@ -5,18 +5,18 @@
 # echo "Server stopped."
 
 # reset database. All data in keyspace "group4" will be remove.
-ssh -i 391winter.pem ubuntu@10.2.3.31 "rm -rf /mystorage/cassandra/"
-ssh -i 391winter.pem ubuntu@10.2.3.30 "rm -rf /mystorage/cassandra/"
-ssh -i 391winter.pem ubuntu@10.2.3.5 "rm -rf /mystorage/cassandra/"
+# ssh -i 391winter.pem ubuntu@10.2.3.31 "rm -rf /mystorage/cassandra/"
+# ssh -i 391winter.pem ubuntu@10.2.3.30 "rm -rf /mystorage/cassandra/"
+# ssh -i 391winter.pem ubuntu@10.2.3.5 "rm -rf /mystorage/cassandra/"
 # ssh -i 391winter.pem ubuntu@10.2.2.187 "rm -rf /mystorage/cassandra/"
 # ssh -i 391winter.pem ubuntu@10.2.2.180 "rm -rf /mystorage/cassandra/"
 # ssh -i 391winter.pem ubuntu@10.2.0.157 "rm -rf /mystorage/cassandra/"
 
 # upload files to node 1
 echo "Uploading files..."
-scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.3.31:/home/ubuntu/
-scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.3.30:/home/ubuntu/
-scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.3.5:/home/ubuntu/
+scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py query.py ubuntu@10.2.3.31:/home/ubuntu/
+# scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py query.py ubuntu@10.2.3.30:/home/ubuntu/
+# scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py query.py ubuntu@10.2.3.5:/home/ubuntu/
 # scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.2.187:/home/ubuntu/
 # scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.2.180:/home/ubuntu/
 # scp -i 391winter.pem cql/setup.cql cql/columns.cql generate/generate.c insert.py ubuntu@10.2.0.157:/home/ubuntu/
