@@ -475,3 +475,14 @@ FD8_SPARE_FLOW1 int,
 primary key(MOBILE_ID_TYPE, CITY_ID, MONTH_DAY, MSC_CODE, SERVICE_NODE_ID, SEQ_NUM)
 )
 WITH CLUSTERING ORDER BY (CITY_ID ASC);
+
+CREATE OR REPLACE FUNCTION state_group_and_count( state map<int, int>, city text)
+CALLED ON NULL INPUT
+RETURNS map<int, int>
+LANGUAGE java AS '
+Integer count = (Integer) state.get(city);  if (count == null) count = 1; else count++; state.put(city, count); return state; ' ;
+
+CREATE OR REPLACE AGGREGATE group_and_count(text)
+SFUNC state_group_and_count
+STYPE map<int, int>
+INITCOND {};
