@@ -150,7 +150,7 @@ commitlog_directory: /mystorage/cassandra/commitlog
 #              remaining available sstables.  This means you WILL see obsolete
 #              data at CL.ONE!
 # ignore: ignore fatal errors and let requests fail, as in pre-1.2 Cassandra
-disk_failure_policy: stop
+disk_failure_policy: best_effort
 
 # policy for commit disk failures:
 # die: shut down gossip and Thrift and kill the JVM, so the node can be replaced.
@@ -186,7 +186,9 @@ key_cache_size_in_mb:
 # Default is 14400 or 4 hours.
 key_cache_save_period: 14400
 
-# Number of keys from thTest Cluster: 100
+# Number of keys from the key cache to save
+# Disabled by default, meaning all keys are going to be saved
+# key_cache_keys_to_save: 100
 
 # Row cache implementation class name.
 # Available implementations:
@@ -265,7 +267,7 @@ saved_caches_directory: /mystorage/cassandra/saved_caches
 # and the CommitLog is simply synced every commitlog_sync_period_in_ms
 # milliseconds.
 commitlog_sync: periodic
-commitlog_sync_period_in_ms: 10000
+commitlog_sync_period_in_ms: 100000
 
 # The size of the individual commitlog file segments.  A commitlog
 # segment may be archived, deleted, or recycled once all the data
@@ -311,8 +313,8 @@ seed_provider:
 # number of "concurrent_writes" is dependent on the number of cores in
 # your system; (8 * number_of_cores) is a good rule of thumb.
 concurrent_reads: 32
-concurrent_writes: 32
-concurrent_counter_writes: 32
+concurrent_writes: 64
+concurrent_counter_writes: 64
 
 # Total memory to use for sstable-reading buffers.  Defaults to
 # the smaller of 1/4 of heap or 512MB.
@@ -442,11 +444,11 @@ native_transport_port: 9042
 # This is similar to rpc_max_threads though the default differs slightly (and
 # there is no native_transport_min_threads, idle threads will always be stopped
 # after 30 seconds).
-# native_transport_max_threads: 128
+native_transport_max_threads: 512
 #
 # The maximum size of allowed frame. Frame (requests) larger than this will
 # be rejected as invalid. The default is 256MB.
-# native_transport_max_frame_size_in_mb: 256
+native_transport_max_frame_size_in_mb: 512
 
 # The maximum number of concurrent client connections.
 # The default is -1, which means unlimited.
@@ -511,7 +513,7 @@ rpc_keepalive: true
 #
 # Alternatively,  can provide your own RPC server by providing the fully-qualified class name
 # of an o.a.c.t.TServerFactory that can create an instance of it.
-rpc_server_type: sync
+rpc_server_type: hsha
 
 # Uncomment rpc_min|max_thread to set request pool size limits.
 #
@@ -524,7 +526,7 @@ rpc_server_type: sync
 # rpc_max_threads represents the maximum number of client requests this server may execute concurrently.
 #
 # rpc_min_threads: 16
-# rpc_max_threads: 2048
+rpc_max_threads: 2048
 
 # uncomment to set socket buffer sizes on rpc connections
 # rpc_send_buff_size_in_bytes:
@@ -543,7 +545,7 @@ rpc_server_type: sync
 # internode_recv_buff_size_in_bytes:
 
 # Frame size for thrift (maximum message length).
-thrift_framed_transport_size_in_mb: 15
+thrift_framed_transport_size_in_mb: 150
 
 # Set to true to have Cassandra create a hard link to each sstable
 # flushed or streamed locally in a backups/ subdirectory of the
@@ -616,7 +618,7 @@ batch_size_fail_threshold_in_kb: 50
 # 16 to 32 times the rate you are inserting data is more than sufficient.
 # Setting this to 0 disables throttling. Note that this account for all types
 # of compaction, including validation compaction.
-compaction_throughput_mb_per_sec: 16
+compaction_throughput_mb_per_sec: 0
 
 # Log a warning when compacting partitions larger than this value
 compaction_large_partition_warning_threshold_mb: 100
@@ -632,32 +634,32 @@ sstable_preemptive_open_interval_in_mb: 50
 # mostly sequential IO when streaming data during bootstrap or repair, which
 # can lead to saturating the network connection and degrading rpc performance.
 # When unset, the default is 200 Mbps or 25 MB/s.
-# stream_throughput_outbound_megabits_per_sec: 200
+stream_throughput_outbound_megabits_per_sec: 800
 
 # Throttles all streaming file transfer between the datacenters,
 # this setting allows users to throttle inter dc stream throughput in addition
 # to throttling all network stream traffic as configured with
 # stream_throughput_outbound_megabits_per_sec
 # When unset, the default is 200 Mbps or 25 MB/s
-# inter_dc_stream_throughput_outbound_megabits_per_sec: 200
+inter_dc_stream_throughput_outbound_megabits_per_sec: 800
 
 # How long the coordinator should wait for read operations to complete
-read_request_timeout_in_ms: 20000
+read_request_timeout_in_ms: 600000
 # How long the coordinator should wait for seq or index scans to complete
-range_request_timeout_in_ms: 20000
+range_request_timeout_in_ms: 600000
 # How long the coordinator should wait for writes to complete
-write_request_timeout_in_ms: 20000
+write_request_timeout_in_ms: 600000
 # How long the coordinator should wait for counter writes to complete
-counter_write_request_timeout_in_ms: 20000
+counter_write_request_timeout_in_ms: 600000
 # How long a coordinator should continue to retry a CAS operation
 # that contends with other proposals for the same row
-cas_contention_timeout_in_ms: 1000
+cas_contention_timeout_in_ms: 100000
 # How long the coordinator should wait for truncates to complete
 # (This can be much longer, because unless auto_snapshot is disabled
 # we need to flush first so we can snapshot before removing the data.)
-truncate_request_timeout_in_ms: 60000
+truncate_request_timeout_in_ms: 600000
 # The default timeout for other, miscellaneous operations
-request_timeout_in_ms: 20000
+request_timeout_in_ms: 600000
 
 # Enable operation timeout information exchange between nodes to accurately
 # measure request timeouts.  If disabled, replicas will assume that requests
@@ -761,7 +763,7 @@ dynamic_snitch_badness_threshold: 0.1
 # client requests to a node with a separate queue for each
 # request_scheduler_id. The scheduler is further customized by
 # request_scheduler_options as described below.
-request_scheduler: org.apache.cassandra.scheduler.NoScheduler
+request_scheduler: org.apache.cassandra.scheduler.RoundRobinScheduler
 
 # Scheduler Options vary based on the type of scheduler
 # NoScheduler - Has no options
